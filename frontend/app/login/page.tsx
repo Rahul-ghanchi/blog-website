@@ -1,52 +1,22 @@
-"use client";
+import Link from "next/link";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-export default function Login() {
-  const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    if (email && password) {
-      localStorage.setItem("token", "user123");
-      alert("Login Success ✅");
-      router.push("/");
-    } else {
-      alert("Enter details ❌");
-    }
-  };
-
+export default function LoginPage() {
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "80vh"
-    }}>
-      <div className="card" style={{ width: "300px" }}>
+    <div className="login-page">
+      <div className="login-box">
         <h2>🔐 Login</h2>
 
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
-        />
+        <input type="email" placeholder="Enter Email" />
+        <input type="password" placeholder="Enter Password" />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
-        />
+        <button>Login</button>
 
-        <button className="btn" onClick={handleLogin}>
-          Login
-        </button>
+        <p>
+          Don't have an account?{" "}
+          <Link href="/signup" style={{ color: "#3b82f6" }}>
+            Signup
+          </Link>
+        </p>
       </div>
     </div>
   );

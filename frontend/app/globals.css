@@ -63,3 +63,38 @@ input::placeholder,
 textarea::placeholder {
   color: #94a3b8;
 }
+/* LOGIN CENTER FIX */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* navbar ke niche center */
+  min-height: calc(100vh - 70px);
+}
+
+.login-box {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 10px;
+  width: 320px;
+  text-align: center;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: none;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

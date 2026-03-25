@@ -1,14 +1,23 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 
-export default function RootLayout({ children }: any) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html>
-      <body>
+    <html lang="en">
+      <body className="bg-gradient-to-br from-black via-[#020617] to-[#0f172a] text-white">
+        
+        {/* ✅ Correct Navbar */}
         <Navbar />
-        <div style={{ padding: "20px" }}>
+
+        {/* ✅ Center Content */}
+        <main className="min-h-[calc(100vh-70px)] flex items-center justify-center">
           {children}
-        </div>
+        </main>
+
       </body>
     </html>
   );
