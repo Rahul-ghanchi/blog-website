@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [blogs, setBlogs] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
   const router = useRouter();
 
   const fetchBlogs = async () => {
@@ -28,31 +29,63 @@ export default function Home() {
     <div style={{ padding: "20px" }}>
       <h1>🔥 All Blogs</h1>
 
-      {blogs.map((blog) => (
-        <div key={blog._id} style={{ margin: "15px 0" }}>
-          <h3>{blog.title}</h3>
-          <p>{blog.content}</p>
+      {/* SEARCH */}
+      <input
+        type="text"
+        placeholder="Search blogs..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          padding: "10px",
+          margin: "20px 0",
+          width: "300px",
+          borderRadius: "8px",
+        }}
+      />
 
-          {blog.image && (
-            <img
-              src={`http://localhost:5000/uploads/${blog.image}`}
-              width="200"
-            />
-          )}
+      {/* GRID */}
+      <div className="blog-grid">
+        {blogs
+          .filter((blog) =>
+            blog.title.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((blog) => (
+            <div className="blog-card" key={blog._id}>
+              {blog.image && (
+                <img
+                  src={`http://localhost:5000/uploads/${blog.image}`}
+                  alt="blog"
+                />
+              )}
 
-          <br />
+              <h3>{blog.title}</h3>
+              <p>{blog.content.slice(0, 80)}...</p>
 
-          <button onClick={() => router.push(`/blog/${blog._id}`)}>
-            👁 View
-          </button>
+              <div className="btn-group">
+                <button
+                  className="view"
+                  onClick={() => router.push(`/blog/${blog._id}`)}
+                >
+                  View
+                </button>
 
-          <button onClick={() => router.push(`/edit-blog/${blog._id}`)}>
-            ✏ Edit
-          </button>
+                <button
+                  className="edit"
+                  onClick={() => router.push(`/edit-blog/${blog._id}`)}
+                >
+                  Edit
+                </button>
 
-          <button onClick={() => handleDelete(blog._id)}>🗑 Delete</button>
-        </div>
-      ))}
+                <button
+                  className="delete"
+                  onClick={() => handleDelete(blog._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }

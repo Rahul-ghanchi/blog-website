@@ -9,38 +9,69 @@ export default function EditBlog() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/blog/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTitle(data.title);
-        setContent(data.content);
-      });
+    const fetchBlog = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/blog/${id}`);
+        const data = await res.json();
+
+        setTitle(data.title || "");
+        setContent(data.content || "");
+      } catch (error) {
+        console.log("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchBlog();
   }, [id]);
 
   const handleUpdate = async () => {
-    await fetch(`http://localhost:5000/update-blog/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content }),
-    });
+    try {
+      const res = await fetch(`http://localhost:5000/update-blog/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, content }),
+      });
 
-    router.push("/");
+      const data = await res.json();
+      alert(data.message);
+
+      router.push("/");
+    } catch (error) {
+      console.log("Update error:", error);
+    }
   };
 
+  if (loading) return <h2 style={{ padding: "20px" }}>Loading...</h2>;
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Edit Blog</h2>
+    <div className="login-page">
+      <div className="login-box">
+        <h2>✏️ Edit Blog</h2>
 
-      <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter title"
+        />
 
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={5}
+          placeholder="Enter content"
+          style={{ marginTop: "10px" }}
+        />
 
-      <button onClick={handleUpdate}>Update</button>
+        <button onClick={handleUpdate}>Update Blog</button>
+      </div>
     </div>
   );
 }

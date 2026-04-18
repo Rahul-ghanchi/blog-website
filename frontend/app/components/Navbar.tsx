@@ -12,7 +12,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="navbar">
+    <div className="navbar flex justify-between items-center px-6 py-4">
       <h2>🚀 Blog App</h2>
 
       <div>

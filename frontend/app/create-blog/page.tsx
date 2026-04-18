@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CreateBlog() {
@@ -9,6 +9,16 @@ export default function CreateBlog() {
   const [image, setImage] = useState<any>(null);
 
   const router = useRouter();
+
+  // ✅ LOGIN CHECK (TOP PE)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Login required ❌");
+      router.push("/login");
+    }
+  }, []);
 
   const handleCreate = async () => {
     if (!title || !content) {
@@ -29,7 +39,6 @@ export default function CreateBlog() {
     const data = await res.json();
     alert(data.message);
 
-    // redirect to home
     router.push("/");
   };
 
@@ -53,7 +62,7 @@ export default function CreateBlog() {
 
         <input
           type="file"
-          onChange={(e) => setImage(e.target.files?.[0])}
+          onChange={(e: any) => setImage(e.target.files[0])}
         />
 
         <button onClick={handleCreate}>Create Blog</button>

@@ -1,33 +1,49 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (email === "" || password === "") {
-      alert("Please fill all fields");
-      return;
+  const router = useRouter();
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      console.log("FULL RESPONSE:", data);
+      console.log("LOGIN RESPONSE:", data);
+
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        alert("Login successful ✅");
+        router.push("/");
+      } else {
+        alert(data.message || "Login failed ❌");
+      }
+    } catch (error) {
+      alert("Server error ❌");
     }
 
-    const res = await fetch("http://localhost:5000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    alert(data.message);
+    setLoading(false);
   };
 
   return (
     <div className="login-page">
-      <div className="login-box">
+      <form onSubmit={handleLogin} className="login-box">
         <h2>🔐 Login</h2>
 
         <input
@@ -35,6 +51,7 @@ export default function LoginPage() {
           placeholder="Enter Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
@@ -42,17 +59,28 @@ export default function LoginPage() {
           placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
-        <button onClick={handleLogin}>Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        <p>
+        {/* ✅ SIGNUP LINK ADD KIYA */}
+        <p style={{ marginTop: "15px", textAlign: "center" }}>
           Don't have an account?{" "}
-          <Link href="/signup" style={{ color: "#3b82f6" }}>
+          <span
+            style={{
+              color: "#60a5fa",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+            onClick={() => router.push("/signup")}
+          >
             Signup
-          </Link>
+          </span>
         </p>
-      </div>
+      </form>
     </div>
   );
 }
